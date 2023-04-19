@@ -1,0 +1,73 @@
+---
+# YAML documents begin with the document separator ---
+- name: Collect all WordPress users
+  hosts: coeurl
+  vars_files: defaults/main.yaml
+  gather_facts: false
+  ignore_errors: true
+  tasks:
+    - name: Gather the WordPress users
+      tags: building
+      block:
+        - name: List all WordPress sites
+          ansible.builtin.command: wp site list --url={{ URL }} --field=url
+          args:
+            chdir: '{{ TRAIL }}'
+          register: urls
+          changed_when: urls.rc != 0
+
+        - name: Write the list of WordPress sites
+          ansible.builtin.copy:
+            content: '{{ urls.stdout }}'
+            dest: '{{ HOME }}sites.txt'
+            mode: '0644'
+
+        - name: Get all the WordPress users
+          ansible.builtin.script:
+            cmd: '{{ GIT }}last-login/users.rb {{ TRAIL }} {{ HOME }}'
+
+        - name: Download the all-wp-users.txt file
+          ansible.builtin.fetch:
+            src: '{{ HOME }}all-wp-users.txt'
+            dest: '{{ GIT }}last-login/results/'
+            flat: true
+
+        - name: Filter duplicates from the user file
+          ansible.builtin.script:
+          args:
+            chdir: '{{ HOME }}'
+            cmd: '{{ GIT }}last-login/uniq.rb'
+
+        - name: Delete header row from filtered.txt file
+          ansible.builtin.lineinfile:
+            path: '{{ HOME }}filtered.txt'
+            search_string: 'ID'
+            state: absent
+            mode: '0644'
+
+        - name: Download the filtered.txt file
+          ansible.builtin.fetch:
+            src: '{{ HOME }}filtered.txt'
+            dest: '{{ GIT }}last-login/results/'
+            flat: true
+
+    - name: Filter users and query their last login
+      tags: sorting
+      block:
+        - name: Retrieve the last login timestamps
+          ansible.builtin.script:
+          args:
+            chdir: '{{ HOME }}'
+            cmd: '{{ GIT }}last-login/meta.rb {{ TRAIL }} {{ URL }}'
+
+        - name: Download the three sorted files
+          ansible.builtin.fetch:
+            src: '{{ HOME }}{{ item }}'
+            dest: '{{ GIT }}last-login/results/'
+            flat: true
+          loop:
+            - olds.json
+            - blanks.json
+            - goodies.json
+# Three dots indicate the end of a YAML document
+...
