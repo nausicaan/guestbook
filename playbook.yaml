@@ -24,19 +24,19 @@
 
         - name: Get all the WordPress users
           ansible.builtin.script:
-            cmd: '{{ GIT }}last-login/users.rb {{ TRAIL }} {{ HOME }}'
+            cmd: '{{ GIT }}guestbook/users.rb {{ TRAIL }} {{ HOME }}'
 
         - name: Download the all-wp-users.txt file
           ansible.builtin.fetch:
             src: '{{ HOME }}all-wp-users.txt'
-            dest: '{{ GIT }}last-login/results/'
+            dest: '{{ GIT }}guestbook/results/'
             flat: true
 
         - name: Filter duplicates from the user file
           ansible.builtin.script:
           args:
             chdir: '{{ HOME }}'
-            cmd: '{{ GIT }}last-login/uniq.rb'
+            cmd: '{{ GIT }}guestbook/uniq.rb'
 
         - name: Delete header row from filtered.txt file
           ansible.builtin.lineinfile:
@@ -48,7 +48,7 @@
         - name: Download the filtered.txt file
           ansible.builtin.fetch:
             src: '{{ HOME }}filtered.txt'
-            dest: '{{ GIT }}last-login/results/'
+            dest: '{{ GIT }}guestbook/results/'
             flat: true
 
     - name: Filter users and query their last login
@@ -58,16 +58,16 @@
           ansible.builtin.script:
           args:
             chdir: '{{ HOME }}'
-            cmd: '{{ GIT }}last-login/meta.rb {{ TRAIL }} {{ URL }}'
+            cmd: '{{ GIT }}guestbook/meta.rb {{ TRAIL }} {{ URL }}'
 
         - name: Download the three sorted files
           ansible.builtin.fetch:
             src: '{{ HOME }}{{ item }}'
-            dest: '{{ GIT }}last-login/results/'
+            dest: '{{ GIT }}guestbook/results/'
             flat: true
           loop:
             - olds.json
             - blanks.json
-            - goodies.json
+            - currents.json
 # Three dots indicate the end of a YAML document
 ...
