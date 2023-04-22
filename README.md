@@ -1,21 +1,22 @@
 # Guestbook
 
-Guestbook is an Ansible playbook, which together with two Ruby scripts, gathers and saves meta data relating to a WordPress users most recent login. The information is stored in Linux Epoch time.
+Guestbook is an Ansible playbook, which together with two Ruby scripts, gathers and saves meta data relating to a WordPress users most recent login. The information is stored in Linux epoch time.
 
 ## Prerequisites
 
-- Variables declared in a defaults/main.yaml file:
-    1. HOME: Remote server directory where output files are created.
-    2. GIT: Local path to your git repository.
-    3. TRAIL: Path to the wordpress installation.
-    4. URL: Wordpress root domain.
+Variables declared in a defaults/main.yaml file:
 
-```ansible
-    - name: Retrieve the last login timestamps
-    ansible.builtin.script:
-    args:
-        chdir: '{{ HOME }}'
-        cmd: '{{ GIT }}guestbook/meta.rb {{ TRAIL }} {{ URL }}'
+- HOME: Remote server directory where output files are created.
+- GIT: Local path to your git repository.
+- TRAIL: Path to the wordpress installation.
+- URL: Wordpress root domain.
+
+```console
+- name: Retrieve the last login timestamps
+  ansible.builtin.script:
+  args:
+    chdir: '{{ HOME }}'
+    cmd: '{{ GIT }}guestbook/meta.rb {{ TRAIL }} {{ URL }}'
 ```
 
 ## Run
@@ -23,7 +24,7 @@ Guestbook is an Ansible playbook, which together with two Ruby scripts, gathers 
 Navigate to the folder containing your ***playbook.yaml*** file and run:
 
 ```console
-ansible-playbook -i inventory.yaml playbook.yaml
+ansible-playbook playbook.yaml
 ```
 
 ## License
