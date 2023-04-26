@@ -1,73 +1,57 @@
 ---
 # YAML documents begin with the document separator ---
-- name: Collect all WordPress users
-  hosts: coeurl
+- name: Site logins for WordPress users
+  hosts: chimera
   vars_files: defaults/main.yaml
   gather_facts: false
   ignore_errors: true
   tasks:
-    - name: Gather the WordPress users
-      tags: building
+    - name: Gather WordPress users
+      tags: gathering
       block:
-        - name: List all WordPress sites
-          ansible.builtin.command: wp site list --url={{ URL }} --field=url
-          args:
-            chdir: '{{ TRAIL }}'
+        - name: Capture all WordPress sites as variable urls
+          ansible.builtin.command: wp site list --url={{ URL }} --path='{{ WPATH }}' --field=url
           register: urls
           changed_when: urls.rc != 0
 
-        - name: Write the list of WordPress sites
+        - name: Copy all WordPress sites to sites.txt
           ansible.builtin.copy:
             content: '{{ urls.stdout }}'
             dest: '{{ HOME }}sites.txt'
             mode: '0644'
 
-        - name: Get all the WordPress users
+        - name: Get all WordPress users per site
           ansible.builtin.script:
-            cmd: '{{ GIT }}guestbook/users.rb {{ TRAIL }} {{ HOME }}'
+            cmd: '{{ GIT }}users.rb {{ WPATH }} {{ HOME }}'
 
-        - name: Download the all-wp-users.txt file
-          ansible.builtin.fetch:
-            src: '{{ HOME }}all-wp-users.txt'
-            dest: '{{ GIT }}guestbook/results/'
-            flat: true
-
-        - name: Filter duplicates from the user file
+        - name: Filter duplicate users
           ansible.builtin.script:
-          args:
-            chdir: '{{ HOME }}'
-            cmd: '{{ GIT }}guestbook/uniq.rb'
+            cmd: '{{ GIT }}uniq.rb all-wp-users.txt filtered.txt'
 
-        - name: Delete header row from filtered.txt file
+        - name: Delete header rows from filtered.txt file
           ansible.builtin.lineinfile:
-            path: '{{ HOME }}filtered.txt'
+            path: 'filtered.txt'
             search_string: 'ID'
             state: absent
             mode: '0644'
 
         - name: Download the filtered.txt file
           ansible.builtin.fetch:
-            src: '{{ HOME }}filtered.txt'
-            dest: '{{ GIT }}guestbook/results/'
+            src: 'filtered.txt'
+            dest: '{{ GIT }}results/'
             flat: true
 
-    - name: Filter users and query their last login
-      tags: sorting
+    - name: Build the json file
+      tags: building
       block:
-        - name: Retrieve the last login timestamps
+        - name: Run the build.rb Ruby script
           ansible.builtin.script:
-          args:
-            chdir: '{{ HOME }}'
-            cmd: '{{ GIT }}guestbook/meta.rb {{ TRAIL }} {{ URL }}'
+            cmd: '{{ GIT }}build.rb {{ WPATH }} {{ URL }}'
 
-        - name: Download the three sorted files
+        - name: Download the cooked.json file
           ansible.builtin.fetch:
-            src: '{{ HOME }}{{ item }}'
-            dest: '{{ GIT }}guestbook/results/'
+            src: 'cooked.json'
+            dest: '{{ GIT }}results/'
             flat: true
-          loop:
-            - olds.json
-            - blanks.json
-            - currents.json
-# Three dots indicate the end of a YAML document
+# Three dots indicate the end of a YAML document \],"{{ item }}":\[
 ...

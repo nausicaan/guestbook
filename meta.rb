@@ -4,8 +4,8 @@ $stdout.flush
 $stdout.sync = true
 arguments = ARGV
 
-Trail = arguments[0]
-Server = arguments[1]
+path = arguments[0]
+server = arguments[1]
 
 @olds = "["
 @blanks = "["
@@ -22,7 +22,7 @@ end
 rn = Time.now.to_i
 ids.each do |line|
   line.chomp!
-  t = %x[wp user meta get "#{line}" last_login --url="#{Server}" --path="#{Trail}"]
+  t = %x[wp user meta get "#{line}" last_login --url="#{server}" --path="#{path}"]
   ts = t.to_i
   if ts == 0
     @blanks << '{"id":"' << "#{line}" << '","timestamp":"None Recorded"},'

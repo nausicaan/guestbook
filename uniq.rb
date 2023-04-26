@@ -2,10 +2,14 @@
 $stdin.flush
 $stdout.flush
 $stdout.sync = true
+arguments = ARGV
 
-e = File.readlines("all-wp-users.txt")
+read = arguments[0]
+write = arguments[1]
+
+e = File.readlines("#{read}")
 e.uniq!
-f = File.open("filtered.txt", "w")
+f = File.open("#{write}", "w")
 
 e.each do |line|
   f.puts(line)
