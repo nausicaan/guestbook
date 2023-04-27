@@ -7,8 +7,8 @@ Guestbook is an Ansible playbook, which together with two Ruby scripts, gathers 
 Variables declared in a defaults/main.yaml file:
 
 - HOME: Remote server directory where output files are created.
-- GIT: Local path to your git repository.
-- TRAIL: Path to the wordpress installation.
+- WPATH: Path to the wordpress installation.
+- GIT: Local path to the git repository.
 - URL: Wordpress root domain.
 
 ```console
