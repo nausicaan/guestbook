@@ -5,8 +5,6 @@
   vars_files: defaults/main.yaml
   gather_facts: false
   ignore_errors: true
-  vars:
-    ordered: "{{ lookup('ansible.builtin.file', '{{ GIT }}results/filtered.txt') }}"
   tasks:
     - name: Gather WordPress users
       tags: gathering
@@ -19,7 +17,7 @@
         - name: Write urls to sites.txt
           ansible.builtin.copy:
             content: '{{ urls.stdout }}'
-            dest: '{{ HOME }}sites.txt'
+            dest: 'sites.txt'
             mode: '0644'
 
         - name: Get all WordPress users per site
@@ -28,25 +26,7 @@
 
         - name: Filter duplicate users
           ansible.builtin.script:
-            cmd: '{{ GIT }}uniq.rb all-wp-users.txt filtered.txt'
-
-        - name: Download filtered.txt
-          ansible.builtin.fetch:
-            src: 'filtered.txt'
-            dest: '{{ GIT }}results/'
-            flat: true
-
-        - name: Write sorted IDs
-          ansible.builtin.copy:
-            content: '{{ ordered }}'
-            dest: '{{ HOME }}ordered.txt'
-            mode: '0644'
-
-        - name: Download ordered.txt
-          ansible.builtin.fetch:
-            src: 'ordered.txt'
-            dest: '{{ GIT }}results/'
-            flat: true
+            cmd: "{{ GIT }}uniq.rb all-wp-users.txt filtered.txt"
 
     - name: Build the json file
       tags: building

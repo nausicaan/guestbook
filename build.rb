@@ -17,7 +17,7 @@ end
 
 # Read ordered.txt and transfer the contents to @filtered
 def populate()
-  e = File.readlines(Dir.home + "/ordered.txt")
+  e = File.readlines(Dir.home + "/filtered.txt")
   e.each do |line|
     line.chomp!
     @filtered << "#{line}"
