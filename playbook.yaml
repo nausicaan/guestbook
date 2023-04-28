@@ -3,7 +3,7 @@
 - name: Site logins for WordPress users
   hosts: chimera
   vars_files: defaults/main.yaml
-  gather_facts: true
+  gather_facts: false
   ignore_errors: true
   vars:
     ordered: "{{ lookup('ansible.builtin.file', '{{ GIT }}results/filtered.txt') }}"

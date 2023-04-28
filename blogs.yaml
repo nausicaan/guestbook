@@ -1,0 +1,43 @@
+---
+# YAML documents begin with the document separator ---
+- name: Create a blog url/id reference
+  hosts: chimera
+  vars_files: defaults/main.yaml
+  gather_facts: false
+  ignore_errors: true
+  tasks:
+    - name: Get urls and blog_ids
+      ansible.builtin.command: wp site list --url={{ URL }} --path='{{ WPATH }}' --fields=url,blog_id --format=csv
+      register: blogs
+      changed_when: blogs.rc != 0
+
+    - name: Write urls and blog_ids
+      ansible.builtin.copy:
+        content: '{{ blogs.stdout }}'
+        dest: '{{ HOME }}blogs.txt'
+        mode: '0644'
+
+    - name: Delete header row
+      ansible.builtin.lineinfile:
+        path: '{{ HOME }}blogs.txt'
+        search_string: 'url,blog_id'
+        state: absent
+        mode: '0644'
+
+    - name: Replace newlines
+      ansible.builtin.replace:
+        path: '{{ HOME }}blogs.txt'
+        regexp: '\n'
+        replace: ','
+
+    - name: Compile json file
+      ansible.builtin.script:
+        cmd: '{{ GIT }}blogs.rb'
+
+    - name: Download blogs.json
+      ansible.builtin.fetch:
+        src: 'blogs.json'
+        dest: '{{ GIT }}results/'
+        flat: true
+# Three dots indicate the end of a YAML document
+...

@@ -17,6 +17,7 @@ vendor/
 .DS_Store
 .idea
 .Trashes
+.vscode
 ehthumbs.db
 Thumbs.db
 
