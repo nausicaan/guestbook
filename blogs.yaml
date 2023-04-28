@@ -34,7 +34,7 @@
       ansible.builtin.script:
         cmd: '{{ GIT }}blogs.rb'
       tags:
-        - packages
+        - package
 
     - name: Download files
       ansible.builtin.fetch:
@@ -45,6 +45,6 @@
         - 'blogs.txt'
         - 'blogs.json'
       tags:
-        - packages
+        - package
 # Three dots indicate the end of a YAML document
 ...

@@ -8,12 +8,14 @@ arguments = ARGV
 @filtered, @nickname, @raw = [], [], []
 @duds, @cooked  = "{", "{"
 
+# Write a passed variable to a named file
 def scribble(dest, bunch)
   open(Dir.home + "/#{dest}", 'w') do |f|
     f.print bunch
   end
 end
 
+# Read ordered.txt and transfer the contents to @filtered
 def populate()
   e = File.readlines(Dir.home + "/ordered.txt")
   e.each do |line|
@@ -22,6 +24,7 @@ def populate()
   end
 end
 
+# Grep the list of users with site specific login information, and direct those without to @duds
 def cycle()
   @filtered.each do |line|
     nn = %x[wp user meta get "#{line}" nickname --url="#{@server}" --path="#{@path}"]
@@ -37,6 +40,7 @@ def cycle()
   end
 end
 
+# Filter out extraneous information to extract the blod_id
 def keto(dump)
   collection = dump.split(',')
   collection.each do |line|
@@ -51,6 +55,7 @@ def keto(dump)
   end
 end
 
+# Create the cooked.json file
 def cook()
   index, nindex = 0, 0
   while index < @raw.length() do

@@ -8,6 +8,7 @@ blog, engage, events, forms, vanity, workingforyou = '"Misc": [', '"Engage": [',
 e = File.read("blogs.txt")
 h = e.split(",")
 
+# Write a passed variable to a named file
 def scribble(dest, bunch)
   open(Dir.home + "/#{dest}", 'w') do |f|
     f.print bunch
