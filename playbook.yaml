@@ -6,21 +6,21 @@
   gather_facts: false
   ignore_errors: true
   tasks:
-    - name: Gather WordPress users
+    - name: Gather all WordPress users
       tags: gathering
       block:
-        - name: List WordPress site urls
+        - name: Get site list
           ansible.builtin.command: wp site list --url={{ URL }} --path='{{ WPATH }}' --field=url
           register: urls
           changed_when: urls.rc != 0
 
-        - name: Write urls to sites.txt
+        - name: Write site urls to sites.txt
           ansible.builtin.copy:
             content: '{{ urls.stdout }}'
             dest: 'sites.txt'
             mode: '0644'
 
-        - name: Get all WordPress users per site
+        - name: Query users per site
           ansible.builtin.script:
             cmd: '{{ GIT }}users.rb {{ WPATH }} {{ HOME }}'
 
@@ -28,17 +28,20 @@
           ansible.builtin.script:
             cmd: "{{ GIT }}uniq.rb all-wp-users.txt filtered.txt"
 
-    - name: Build the json file
+    - name: Build the json files
       tags: building
       block:
         - name: Compile the user:site index
           ansible.builtin.script:
             cmd: '{{ GIT }}build.rb {{ WPATH }} {{ URL }}'
 
-        - name: Download cooked.json
+        - name: Download json files
           ansible.builtin.fetch:
-            src: 'cooked.json'
+            src: '{{ item }}'
             dest: '{{ GIT }}results/'
             flat: true
+          loop:
+            - 'duds.json'
+            - 'cooked.json'
 # Three dots indicate the end of a YAML document
 ...

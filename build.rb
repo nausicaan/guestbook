@@ -6,7 +6,7 @@ arguments = ARGV
 
 @path, @server = arguments[0], arguments[1]
 @filtered, @nickname, @raw = [], [], []
-@duds, @cooked  = "{", "{"
+@duds, @cooked  = "[", "{"
 
 # Write a passed variable to a named file
 def scribble(dest, bunch)
@@ -35,7 +35,7 @@ def cycle()
       ust.gsub!("\n" , ",")
       keto(ust)
     else
-      @duds << '{"ID":"' << "#{line}" << '","Username":"' << "#{nn}" << '"},'
+      @duds << '{"ID":' << "#{line}" << ',"Username":"' << "#{nn}" << '"},'
     end
   end
 end
@@ -82,8 +82,9 @@ end
 populate()
 cycle()
 cook()
+@duds.chop!
 @cooked.chop!
-@duds << "}"
+@duds << "]"
 @cooked << "}"
 scribble("duds.json", @duds)
 scribble("cooked.json", @cooked)
