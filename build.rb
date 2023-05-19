@@ -86,5 +86,5 @@ cook()
 @cooked.chop!
 @duds << "]"
 @cooked << "}"
-scribble("duds.json", @duds)
-scribble("cooked.json", @cooked)
+scribble("zeros.json", @duds)
+scribble("current.json", @cooked)

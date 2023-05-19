@@ -21,11 +21,15 @@ Variables declared in a defaults/main.yaml file:
 
 ## Run
 
-Navigate to the folder containing your ***playbook.yaml*** file and run:
+Navigate to the folder containing your ***playbook.yaml*** file and (dependent on the location of your inventory file) run:
 
 ```console
-ansible-playbook playbook.yaml
+ansible-playbook -i ~/inventory.yaml playbook.yaml
 ```
+
+## Output
+
+Outputs two files: (1) registered users who have no recorded logins anywhere, and (2) registered users who have recorded at leat one login at some point. These files are named *zeros.json* and *current.json* respectively.
 
 ## License
 
