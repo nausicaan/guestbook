@@ -3,9 +3,7 @@ $stdin.flush
 $stdout.flush
 $stdout.sync = true
 arguments = ARGV
-
-read = arguments[0]
-write = arguments[1]
+read, write = arguments[0], arguments[1]
 
 n = []
 e = File.readlines("#{read}")

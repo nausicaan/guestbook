@@ -28,34 +28,34 @@ while index < h.length() do
   end
   case @variety
   when "forms"
-    forms << '{"URL": "' << "#{h[index]}" << '"},'
+    forms << '{"URL": "' << "#{h[index]}" << '",'
     index += 1
-    forms << '{"ID": ' << "#{h[index]}" << '},'
+    forms << '"ID": ' << "#{h[index]}" << '},'
     index += 1
   when "engage"
-    engage << '{"URL": "' << "#{h[index]}" << '"},'
+    engage << '{"URL": "' << "#{h[index]}" << '",'
     index += 1
-    engage << '{"ID": ' << "#{h[index]}" << '},'
+    engage << '"ID": ' << "#{h[index]}" << '},'
     index += 1
   when "events"
-    events << '{"URL": "' << "#{h[index]}" << '"},'
+    events << '{"URL": "' << "#{h[index]}" << '",'
     index += 1
-    events << '{"ID": ' << "#{h[index]}" << '},'
+    events << '"ID": ' << "#{h[index]}" << '},'
     index += 1
   when "vanity"
-    vanity << '{"URL": "' << "#{h[index]}" << '"},'
+    vanity << '{"URL": "' << "#{h[index]}" << '",'
     index += 1
-    vanity << '{"ID": ' << "#{h[index]}" << '},'
+    vanity << '"ID": ' << "#{h[index]}" << '},'
     index += 1
   when "workingforyou"
-    workingforyou << '{"URL": "' << "#{h[index]}" << '"},'
+    workingforyou << '{"URL": "' << "#{h[index]}" << '",'
     index += 1
-    workingforyou << '{"ID": ' << "#{h[index]}" << '},'
+    workingforyou << '"ID": ' << "#{h[index]}" << '},'
     index += 1
   else
-    blog << '{"URL": "' << "#{h[index]}" << '"},'
+    blog << '{"URL": "' << "#{h[index]}" << '",'
     index += 1
-    blog << '{"ID": ' << "#{h[index]}" << '},'
+    blog << '"ID": ' << "#{h[index]}" << '},'
     index += 1
   end
 end

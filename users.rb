@@ -4,9 +4,7 @@ $stdout.flush
 $stdout.sync = true
 arguments = ARGV
 
-path = arguments[0]
-home = arguments[1]
-
+path, home = arguments[0], arguments[1]
 sites = File.readlines("#{home}sites.txt")
 
 open("#{arguments[1]}all-wp-users.txt", 'w') do |f|

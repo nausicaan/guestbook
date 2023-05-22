@@ -41,7 +41,7 @@
             dest: '{{ GIT }}results/'
             flat: true
           loop:
-            - 'duds.json'
-            - 'cooked.json'
+            - 'zeros.json'
+            - 'current.json'
 # Three dots indicate the end of a YAML document
 ...
