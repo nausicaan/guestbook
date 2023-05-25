@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+require 'json'
+
+$stdin.flush
+$stdout.flush
+$stdout.sync = true
+arguments = ARGV
+f1 = File.read('test.json')
+f2 = File.read('sites.json')
+people = JSON.parse(f1)
+places = JSON.parse(f2)
+
+@path, @server, @uid = arguments[0], arguments[1], ""
+
+# Write a passed variable to a named file
+def scribble(bunch)
+  open(Dir.home + "/for-deletion.txt", 'w') do |f|
+    f.print bunch
+  end
+end
+
+# Delete a WP user from a specific site.
+def expunge(url)
+  $stdout.puts %x[wp user delete "#{@uid}" --reassign=31 --url="#{url}"]
+end
+
+# Filter down the grepped information to only blog_id's
+def isolate(bulk)
+  triage = []
+  collection = bulk.split(',')
+  collection.each do |line|
+    if "#{line}".include? "_user_level"
+      line.sub!("wp_", "")
+      line.sub!("_user_level", "")
+      line.chomp!
+      triage << "#{line}"
+    end
+  end
+  return triage
+end
+
+# Main body of the program
+people.each do |line|
+  @uid = "#{line['ID']}"
+  bls = %x[wp user meta list "#{line['ID']}" --url="#{@server}" --path="#{@path}" --format=csv | grep wp_]
+  bls.gsub!("\n" , ",")
+  splat = isolate(bls)
+  splat.each do |nums|
+    places.each do |urls|
+      if nums == urls['blog_id']
+        scribble(urls['url'])
+      end
+    end
+  end
+end

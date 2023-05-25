@@ -6,7 +6,7 @@
   gather_facts: false
   ignore_errors: true
   tasks:
-    - name: Gather all WordPress users
+    - name: Compile all WordPress users
       tags: gathering
       block:
         - name: Get site list
@@ -28,14 +28,14 @@
           ansible.builtin.script:
             cmd: "{{ GIT }}uniq.rb all-wp-users.txt filtered.txt"
 
-    - name: Build the json files
+    - name: Build the reference files
       tags: building
       block:
-        - name: Compile the user:site index
+        - name: Compile the user-site index
           ansible.builtin.script:
             cmd: '{{ GIT }}build.rb {{ WPATH }} {{ URL }}'
 
-        - name: Download json files
+        - name: Download the reference files
           ansible.builtin.fetch:
             src: '{{ item }}'
             dest: '{{ GIT }}results/'
@@ -43,5 +43,18 @@
           loop:
             - 'zeros.json'
             - 'current.json'
+
+    - name: Delete obsolete users from WordPress
+      tags: removing
+      block:
+        - name: Remove designated users
+          ansible.builtin.script:
+            cmd: '{{ GIT }}remove.rb {{ WPATH }} {{ URL }}'
+
+        - name: Download the 'to be deleted' file
+          ansible.builtin.fetch:
+            src: 'for-deletion.txt'
+            dest: '{{ GIT }}results/'
+            flat: true
 # Three dots indicate the end of a YAML document
 ...
