@@ -5,23 +5,18 @@ $stdin.flush
 $stdout.flush
 $stdout.sync = true
 arguments = ARGV
-f1 = File.read('test.json')
-f2 = File.read('sites.json')
-people = JSON.parse(f1)
-places = JSON.parse(f2)
+p1 = File.read('zeros.json')
+p2 = File.read('sites.json')
+people = JSON.parse(p1)
+places = JSON.parse(p2)
 
 @path, @server, @uid = arguments[0], arguments[1], ""
 
 # Write a passed variable to a named file
 def scribble(bunch)
-  open(Dir.home + "/for-deletion.txt", 'w') do |f|
-    f.print bunch
+  open(Dir.home + "/for-deletion.txt", 'a') do |f|
+    f.puts bunch
   end
-end
-
-# Delete a WP user from a specific site.
-def expunge(url)
-  $stdout.puts %x[wp user delete "#{@uid}" --reassign=31 --url="#{url}"]
 end
 
 # Filter down the grepped information to only blog_id's
@@ -48,7 +43,7 @@ people.each do |line|
   splat.each do |nums|
     places.each do |urls|
       if nums == urls['blog_id']
-        scribble(urls['url'])
+        $stdout.puts %x[wp user delete "#{@uid}" --reassign=31 --url="#{urls['url']}" --path="#{@path}"]
       end
     end
   end

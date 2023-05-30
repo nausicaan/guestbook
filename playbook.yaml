@@ -1,5 +1,4 @@
 ---
-# YAML documents begin with the document separator ---
 - name: Site logins for WordPress users
   hosts: chimera
   vars_files: defaults/main.yaml
@@ -50,11 +49,4 @@
         - name: Remove designated users
           ansible.builtin.script:
             cmd: '{{ GIT }}remove.rb {{ WPATH }} {{ URL }}'
-
-        - name: Download the 'to be deleted' file
-          ansible.builtin.fetch:
-            src: 'for-deletion.txt'
-            dest: '{{ GIT }}results/'
-            flat: true
-# Three dots indicate the end of a YAML document
 ...
