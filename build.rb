@@ -8,16 +8,16 @@ arguments = ARGV
 @filtered, @nickname, @raw = [], [], []
 @duds, @cooked  = "[", "{"
 
-# Write a passed variable to a named file
-def scribble(dest, bunch)
-  open(Dir.home + "/#{dest}", 'w') do |f|
-    f.print bunch
+# Create new files or overwite existing ones
+def scribble(name, content)
+  open("#{name}", 'w') do |f|
+    f.print content
   end
 end
 
 # Read ordered.txt and transfer the contents to @filtered
 def populate()
-  e = File.readlines(Dir.home + "/filtered.txt")
+  e = File.readlines(Dir.home + "/filtered-ids.txt")
   e.each do |line|
     line.chomp!
     @filtered << "#{line}"
@@ -86,5 +86,5 @@ cook()
 @cooked.chop!
 @duds << "]"
 @cooked << "}"
-scribble("zeros.json", @duds)
-scribble("current.json", @cooked)
+scribble(Dir.home + "zeros.json", @duds)
+scribble(Dir.home + "current.json", @cooked)

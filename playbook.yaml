@@ -6,7 +6,7 @@
   ignore_errors: true
   tasks:
     - name: Compile all WordPress users
-      tags: gathering
+      tags: gather
       block:
         - name: Get site list
           ansible.builtin.command: wp site list --url={{ URL }} --path='{{ WPATH }}' --field=url
@@ -25,10 +25,10 @@
 
         - name: Filter duplicate users
           ansible.builtin.script:
-            cmd: "{{ GIT }}uniq.rb all-wp-users.txt filtered.txt"
+            cmd: "{{ GIT }}uniq.rb all-ids.txt filtered-ids.txt"
 
     - name: Build the reference files
-      tags: building
+      tags: build
       block:
         - name: Compile the user-site index
           ansible.builtin.script:
@@ -44,7 +44,7 @@
             - 'current.json'
 
     - name: Delete obsolete users from WordPress
-      tags: removing
+      tags: remove
       block:
         - name: Remove designated users
           ansible.builtin.script:

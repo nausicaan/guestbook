@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
-require 'json'
-
 $stdin.flush
 $stdout.flush
 $stdout.sync = true
 arguments = ARGV
+require 'json'
+
 p1 = File.read('zeros.json')
 p2 = File.read('sites.json')
 people = JSON.parse(p1)
