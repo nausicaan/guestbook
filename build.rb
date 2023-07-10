@@ -86,5 +86,5 @@ cook()
 @cooked.chop!
 @duds << "]"
 @cooked << "}"
-scribble(Dir.home + "zeros.json", @duds)
-scribble(Dir.home + "current.json", @cooked)
+scribble(Dir.home + "/zeros.json", @duds)
+scribble(Dir.home + "/current.json", @cooked)

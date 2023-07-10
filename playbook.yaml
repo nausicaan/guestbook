@@ -8,22 +8,22 @@
     - name: Compile all WordPress users
       tags: gather
       block:
-        - name: Get site list
+        - name: Get the list of WordPress site urls
           ansible.builtin.command: wp site list --url={{ URL }} --path='{{ WPATH }}' --field=url
           register: urls
           changed_when: urls.rc != 0
 
-        - name: Write site urls to sites.txt
+        - name: Write the site urls to sites.txt
           ansible.builtin.copy:
             content: '{{ urls.stdout }}'
             dest: 'sites.txt'
             mode: '0644'
 
-        - name: Query users per site
+        - name: Query users per site and create all-ids.txt
           ansible.builtin.script:
             cmd: '{{ GIT }}users.rb {{ WPATH }} {{ HOME }}'
 
-        - name: Filter duplicate users
+        - name: Filter duplicate users from all-ids.txt
           ansible.builtin.script:
             cmd: "{{ GIT }}uniq.rb all-ids.txt filtered-ids.txt"
 

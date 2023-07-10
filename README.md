@@ -2,6 +2,8 @@
 
 Guestbook is an Ansible playbook, which together with multiple Ruby scripts, gathers and saves meta data relating to a WordPress users most recent login. The information is stored in Unix epoch time.
 
+![Book](book.webp)
+
 ## Prerequisites
 
 Variables declared in a defaults/main.yaml file:
